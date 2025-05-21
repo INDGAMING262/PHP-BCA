@@ -1,0 +1,89 @@
+<?php session_start(); ?>
+<html>
+<head>
+<title>Word Frequency Analyser</title>
+</head>
+<body>
+<?php
+if(isset($_REQUEST["analyseBtn"])) {
+$words = trim($_REQUEST["str"]);
+if (strlen($words) > 0) {
+session_unset();
+$_SESSION["str"] = $words;
+}
+}
+$str = isset($_SESSION["str"]) ? $_SESSION["str"] : "";
+?>
+<h2>Word Frequency Analyser</h2>
+<form method="post" action="">
+Enter a string
+<input type="text" name="str" size="50" value="<?= $str ?>" required>
+<input type="submit" name="analyseBtn" value="Analyse">
+</form>
+<?php
+if(isset($_SESSION["str"]) && isset($_REQUEST["analyseBtn"])) {
+$words = $_SESSION["str"];
+if(strlen($words) > 0) {
+$words = explode(' ', $words);
+$frequency = array();
+foreach($words as $word) {
+
+$word = trim($word);
+if (strlen($word) > 0) {
+$word = strtolower($word);
+$frequency[$word] = isset($frequency[$word]) ? $frequency[$word] + 1 : 1;
+}
+}
+$sArr = $frequency;
+$rArr = $frequency;
+$sAr = $frequency;
+$krAr = $frequency;
+ksort($sArr);
+krsort($rArr);
+sort($sAr);
+arsort($krAr);
+$_SESSION["Asc"] = $sArr;
+$_SESSION["Dsc"] = $rArr;
+$_SESSION["Rsar"] = $krAr;
+$_SESSION["max"] = $sAr[count($sAr)-1];
+$_SESSION["min"] = $sAr[0];
+DisplayResult($frequency);
+}
+}
+elseif(isset($_SESSION["str"]) && (isset($_REQUEST["ASortBtn"])|| isset($_REQUEST["DSortBtn"]))) {
+if(isset($_REQUEST["ASortBtn"])) {
+$ar = $_SESSION["Asc"];
+} elseif (isset($_REQUEST["DSortBtn"])) {
+$ar = $_SESSION["Dsc"];
+}
+DisplayResult($ar);
+}
+function DisplayResult($arr)
+{
+echo "<h3> Word Frequency Analyser</h3>";
+foreach($arr as $key => $val) {
+echo "$key:$val times <br>";
+}
+$arr = $_SESSION['Rsar'];
+if(count($arr) > 0) {
+$max = $_SESSION["max"];
+$min = $_SESSION["min"];
+}
+foreach($arr as $key => $value)
+{ if($arr[$key] == $max) {
+echo "<h3> The Most used word is :" . $key . "(used $max times)</h3>";
+}
+if($arr[$key]==$min) {
+echo "<h3> The least used word is:" . $key . "(used $min times)</h3>";
+}
+}
+}
+?>
+<form method="post" action="">
+
+<input type="submit" value="Sort Ascending" name="ASortBtn" style="padding:5px; margin:5px;">
+<input type="submit" value="Sort Descending" name="DSortBtn" style="padding:5px; margin:5px;">
+<br>
+</form>
+</body>
+</html>
