@@ -1,0 +1,134 @@
+<?php
+$sn = "localhost";
+$un = "root";
+$pw = "";
+$db = "customer_details11";
+$conn = new mysqli($sn, $un, $pw, $db);
+if ($conn->connect_error) {
+die("Connection failed: " . $conn->connect_error);
+}
+function addCustomer($name, $item, $mobile)
+{ global $conn;
+$sql = "INSERT INTO customers(Name, item, mobile) VALUES('$name', '$item', '$mobile')";
+if ($conn->query($sql) === TRUE) {
+echo "Customer information added successfully";
+} else {
+echo "Error: " . $sql . "<br>" . $conn->error;
+}
+}
+function deleteCustomer($id)
+{ global $conn;
+$sql = "DELETE FROM customers WHERE id=$id";
+if ($conn->query($sql)) {
+echo "Customer record deleted successfully";
+} else {
+echo "Error: " . $sql . "<br>" . $conn->error;
+}
+}
+function searchCustomer($id)
+{ global $conn;
+$sql = "SELECT * FROM customers WHERE id=$id"; // Corrected the table name
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
+$row = $result->fetch_assoc();
+echo "Customer ID: " . $row["id"] . "<br>";
+echo "Customer Name: " . $row["name"] . "<br>";
+echo "Customer Item: " . $row["item"] . "<br>";
+echo "Customer Mobile: " . $row["mobile"] . "<br>";
+} else {
+echo "Customer record not found";
+}
+}
+function sortById()
+{ global $conn;
+$sql = "SELECT * FROM customers ORDER BY id";
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
+while ($row = $result->fetch_assoc()) {
+echo "Customer ID: " . $row["id"] . "<br>";
+echo "Customer Name: " . $row["name"] . "<br>";
+echo "Customer Item: " . $row["item"] . "<br>";
+echo "Customer Mobile: " . $row["mobile"] . "<br>";
+}
+} else {
+echo "Customer record not found";
+}
+}
+function displayRecords()
+{ global $conn;
+$sql = "SELECT * FROM customers";
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
+while ($row = $result->fetch_assoc()) {
+echo "Customer ID: " . $row["id"] . "<br>";
+echo "Customer Name: " . $row["name"] . "<br>";
+echo "Customer Item: " . $row["item"] . "<br>";
+echo "Customer Mobile: " . $row["mobile"] . "<br>";
+}
+} else {
+echo "Customer record not found";
+}
+}
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if (isset($_POST["add_customer"])) {
+addCustomer($_POST["name"], $_POST["item"], $_POST["mobile"]);
+} elseif (isset($_POST["delete_record"]))
+{ deleteCustomer($_POST["id"]);
+} elseif (isset($_POST["search_record"]))
+{ searchCustomer($_POST["id"]);
+} elseif (isset($_POST["sort_by_id"]))
+{ sortById();
+} elseif (isset($_POST["display_records"]))
+{ displayRecords();
+}
+}
+?>
+<html>
+<head>
+<title>Customer Details</title>
+</head>
+<body>
+<h1>Customer Details</h1>
+<button onclick="document.getElementById('add-form').style.display='block'">Add Customer
+information</button>
+<div id="add-form" style="display:none">
+<form action="" method="post">
+Customer Name: <input type="text" name="name" required><br>
+Customer Item: <input type="text" name="item" required><br>
+Customer Mobile: <input type="text" name="mobile" pattern="[0-9]{10}" title="Please enter a valid
+mobile number" required><br>
+<input type="submit" name="add_customer" value="ADD CUSTOMER">
+</form>
+</div>
+<button onclick="document.getElementById('delete-form').style.display='block'">Delete Customer
+information</button>
+<div id="delete-form" style="display:none">
+<form action="" method="post">
+Customer ID: <input type="text" name="id" required><br>
+<input type="submit" name="delete_record" value="DELETE CUSTOMER">
+</form>
+</div>
+<button onclick="document.getElementById('search-form').style.display='block'">Search Customer
+information</button>
+<div id="search-form" style="display:none">
+<form action="" method="post">
+Customer ID: <input type="text" name="id" required><br>
+<input type="submit" name="search_record" value="SEARCH CUSTOMER">
+</form>
+</div>
+<button onclick="document.getElementById('sort-form').style.display='block'">Sort Customer
+information</button>
+<div id="sort-form" style="display:none">
+<form action="" method="post">
+<input type="submit" name="sort_by_id" value="SORT BY ID">
+</form>
+</div>
+<button onclick="document.getElementById('display-form').style.display='block'">Display Customer
+information</button>
+<div id="display-form" style="display:none">
+<form action="" method="post">
+<input type="submit" name="display_records" value="DISPLAY RECORDS">
+</form>
+</div>
+</body>
+</html>
