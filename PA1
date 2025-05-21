@@ -1,0 +1,33 @@
+Index.html
+<html>
+<head>
+<title>Contact Form</title>
+</head>
+<body>
+<h2>Contact Form</h2>
+<form action="submit.php" method="post">
+<label for="name">Name:</label>
+<input type="text" id="name" name="name" required><br><br>
+<label for="email">Email:</label>
+<input type="email" id="email" name="email" required><br><br>
+<label for="message">Message:</label>
+<textarea id="message" name="message" required></textarea><br><br>
+<input type="submit" value="Submit">
+</form>
+</body>
+</html>
+Submit.php
+<?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+$name = $_POST["name"];
+$email = $_POST["email"];
+$message = $_POST["message"];
+echo "<h2>Form Submission Result:</h2>";
+echo "<p><strong>Name:</strong> $name</p>";
+echo "<p><strong>Email:</strong> $email</p>";
+echo "<p><strong>Message:</strong> $message</p>";
+echo "<p>Thank you for submitting the form!</p>";
+}else{
+echo "Access Denied";
+}
+?>
