@@ -1,0 +1,46 @@
+<html>
+<head>
+<title>ArmStrong Number Checker</title>
+</head>
+<body>
+<h1>Armstrong Number Checker</h1>
+<form action="" method="post">
+<label for="number">Enter a number:</label>
+<input type="text" name="number" id="number" required>
+<input type="submit" value="Check">
+</form>
+<?php
+function isArmstrong($num) {
+$originalnum = $num;
+$sum = 0;
+$digits = strlen( $num );
+while ($num > 0) {
+$digit = $num % 10;
+$sum+=pow($digit,$digits);
+$num=(int)($num/10);
+}
+return $originalnum == $sum;
+}
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+$inputNumber = $_POST["number"];
+if (is_numeric($inputNumber) && $inputNumber>0 && $inputNumber == (int)$inputNumber)
+{ echo"<h3>Result:</h3>";
+if (isArmstrong($inputNumber)) {
+echo "<p>$inputNumber is an Armstrong number.</p>";
+echo"<p>Armstrong Number from the range 1 to $inputNumber</p>";
+for ($i= 1; $i<=$inputNumber; $i++) {
+if (isArmstrong($i))
+{ echo "$i ";
+}
+}
+} else {
+echo "<p>$inputNumber is not an Armstrong number.</p>";
+
+}
+} else {
+echo "<p>Invalid input. Please enter a positive integer.</p>";
+}
+}
+?>
+</body>
+</html>
