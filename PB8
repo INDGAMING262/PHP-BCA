@@ -1,0 +1,128 @@
+<?php
+$sn="localhost";
+$un="root";
+$pw="";
+$dn="PartB-8";
+$conn=new mysqli($sn,$un,$pw,$dn);
+if($conn->connect_error){
+die("Connection failed: " . $conn->connect_error);
+}
+function
+addRecord($room_number,$room_type,$capacity,$status){ globa
+l $conn;
+#check if room number already exists
+$sql="SELECT * FROM rooms WHERE room_number=$room_number";
+$result=$conn->query($sql);
+if($result->num_rows > 0){
+echo "<h3 style='color:red'>Room number $room_number already exists </h3>";
+return;
+}
+$sql="INSERT INTO rooms(room_number,room_type,capacity,status
+VALUES('$room_number','$room_type','$capacity','$status')";
+if($conn->query($sql)){
+echo "Record added successfully";
+}else{
+echo "Error: " . $sql . "<br>" . $conn->error;
+}
+}
+Function listAvailableRooms(){
+global $conn;
+$sql="SELECT * FROM rooms WHERE status='Available'";
+$result=$conn->query($sql);
+if($result->num_rows > 0){
+echo "<h1><b>Available Rooms:</b></h1><br>";
+while($row=$result->fetch_assoc()){
+echo "Room Number: " . $row['room_number'] . "<br>";
+}
+}else{
+}
+}
+echo "Room Type: " . $row['room_type'] . "<br>";
+echo "Capacity: " . $row['capacity'] . "<br>";
+echo "No available rooms";
+function listBookedRooms(){
+global $conn;
+$sql="SELECT * FROM rooms WHERE status='Booked'";
+$result=$conn->query($sql);
+if($result->num_rows > 0){
+echo "<h1><b>Booked Rooms:</b></h1><br>";
+while($row=$result->fetch_assoc()){
+echo "Room Number: " . $row['room_number'] . "<br>";
+echo "Room Type: " . $row['room_type'] . "<br>";
+echo "Capacity: " . $row['capacity'] . "<br>";
+echo "<br>";
+}
+}else{
+echo "No booked rooms";
+}
+}
+function checkIn($room_number){
+global $conn;
+$sql="UPDATE rooms SET status='available' WHERE room_number=$room_number";
+if($conn->query($sql)){
+if($conn->affected_rows > 0){
+echo "Chech-in successfully for room number $room_number";
+}else{
+echo "Room number $room_number not found";
+}
+}
+}
+function checkOut($room_number){
+global $conn;
+$sql="UPDATE rooms SET status='Available' WHERE room_number=$room_number";
+if($conn->query($sql)){
+if($conn->affected_rows > 0){
+echo "Chech-out successfully for room number $room_number";
+}else{
+echo "Room number $room_number not found";
+}
+}
+}
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+if(isset($_POST["add_room"])){ addRecord($_POST["room_number"],$_POST["room_type"],$_POST["capac
+ity"],$_POST["status"]);
+}elseif(isset($_POST["check_in"])){ checkIn($_P
+OST["room_number"]);
+}elseif(isset($_POST["check_out"])){ checkOut($
+_POST["room_number"]);
+}
+}
+?>
+<html>
+<head>
+<title>Hotel Management System</title>
+</head>
+<body>
+<h1>Add Record</h1>
+<form method="post" action="">
+Room Number: <input type="text" name="room_number" required><br>
+Room Type: <select name="room_type" required><br>
+<option value="Single Semi">Single Semi</option>
+<option value="Single Deluxe">Single Deluxe</option>
+<option value="Double Semi">Double Semi</option>
+<option value="Double Deluxe">Double Deluxe</option>
+<option value="Dorimitor">Dorimitor</option>
+</select><br>
+Capacity: <input type="number" name="capacity" required><br>
+Status(Available/Booked): <input type="text" name="status" required><br>
+<input type="submit" name="add_room" value="Add Room">
+</form>
+<hr>
+<h1>Check In</h1>
+<form method="post" action="">
+Room Number: <input type="number" name="room_number" required><br>
+<input type="submit" name="check_in" value="Check In">
+</form>
+<hr>
+<h1>Check Out</h1>
+<form method="post" action="">
+Room Number: <input type="number" name="room_number" required><br>
+<input type="submit" name="check_out" value="Check Out">
+</form>
+<?php listAvailableRooms(); ?>
+<?php listBookedRooms(); ?>
+</body>
+</html>
+<?php
+$conn->close();
+?>
