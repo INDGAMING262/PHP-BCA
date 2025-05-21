@@ -1,0 +1,41 @@
+Index.php
+<html>
+<head>
+<title>Login form</title>
+</head>
+<body>
+<form method="post" action="login.php">
+<label for="username">Username:</label>
+<input type="text" id="username" name="username" required><br><br>
+<label for="password">Password:</label>
+<input type="password" id="password" name="password" required><br><br>
+<input type="submit" value="Login">
+</form>
+</body>
+</html>
+Login.php
+<?php
+$sn="localhost";
+$un="root";
+$pw="";
+$db="userDetails1";
+$conn=mysqli_connect($sn,$un,$pw,$db);
+if($conn->connect_error){
+die("CONNECTION FAILED". $conn->connect_error);
+}
+function sanitize_input($data) {
+return htmlspecialchars(stripslashes(trim($data)));
+}
+if($_SERVER["REQUEST_METHOD"]=="POST"){
+$username=sanitize_input($_POST["username"]);
+$password=sanitize_input($_POST["password"]);
+$sql="SELECT * FROM users WHERE username='$username' AND password='$password'";
+$result=$conn->query($sql);
+if($result->num_rows>0){
+echo"LOGIN SUCCESSFUL";
+}else{
+echo"LOGIN FAILED";
+}
+}
+$conn->close()
+?>
