@@ -1,0 +1,55 @@
+Index.php
+<html>
+<head>
+<title>DISTANCE CALCULATOR</title>
+</head>
+<body>
+<h2>Distance Calculator</h2>
+<form action="distance_calculator.php" method="post">
+<h3>Distance 1:</h3>
+<label for="feet1">Feet:</label>
+<input type="number" name="feet1" id="feet1" required step="1"><br><br>
+<label for="inches1">Inches:</label>
+<input type="number" name="inches1" id="inches1" required step="1"><br><br>
+<h3>Distance 2:</h3>
+<label for="feet2">Feet:</label>
+<input type="number" name="feet2" id="feet2" required step="1"><br><br>
+<label for="inches2">Inches:</label>
+<input type="number" name="inches2" id="inches2" required step="1"><br><br>
+<input type="submit" value="Calculate">
+</form>
+</body>
+</html>
+DistanceCalculator.php
+<?php
+class Distance_calculator{
+public function addDistance($feet1,$inches1,$feet2,$inches2){
+$totalfeet=$feet1+$feet2;
+$totalinches=$inches1+$inches2;
+if($totalinches>=12){
+$totalfeet+=floor($totalinches/12);
+$totalinches=$totalinches%12;
+}
+return array($totalfeet,$totalinches);
+}
+public function findDifference($feet1,$feet2,$inches1,$inches2){
+$totalfeet1=$feet1+$inches1/12;
+$totalfeet2=$feet2+$inches2/12;
+$difference=abs($totalfeet1-$totalfeet2);
+$differenceFeet=floor($difference);
+$differenceInches=($difference-$differenceFeet)*12;
+return array($differenceFeet,$differenceInches);
+}
+}
+if($_SERVER["REQUEST_METHOD"]=="POST"){
+$feet1=$_POST["feet1"];
+$inches1=$_POST["inches1"];
+$feet2=$_POST["feet2"];
+$inches2=$_POST["inches2"];
+$distance_calculator=new Distance_calculator();
+$totalDistance=$distance_calculator->addDistance($feet1,$inches1,$feet2,$inches2);
+$difference_result=$distance_calculator->findDifference($feet1,$feet2,$inches1,$inches2);
+echo "SUM OF DISTANCE : ".$totalDistance[0]." ".$totalDistance[1]."\"<br>";
+echo "DIFFERENCE OF DISTANCE : ".$difference_result[0]." ".$difference_result[1]."\"<br>";
+}
+?>
