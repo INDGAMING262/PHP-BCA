@@ -1,0 +1,28 @@
+<html>
+<head>
+<title>Dictionary</title>
+</head>
+<body>
+<h1>Dictionary</h1>
+<form action="" method="post">
+<label for="word">Enter a word:</label>
+<input type="text" id="word" name="word">
+<button type="submit">Search</button>
+</form>
+<?php
+$dictionary = array( "apple" =>"A round fruit with red or green skin and whitish interior.", "carrot"=>"A tapering orange colored root eaten as a vegetable.", "mango"=>"A fruit that grows on trees.", "dog"=>"A dog is a domestic animal.", "elephant"=>"The elephant is the worlds largest living creature.", "flower"=>"A flower is the beautiful part of a plant that blossoms. ", "guitar"=>"a stringe musical instrument with a fretted fingerboard.", "house"=>"A building for human habitation.", "internet"=>"a global computer network providing a verity of information and communication
+facilities.", "sky"=>"The sky is full of starts.", );
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if (isset($_POST["word"])) {
+$word = strtolower($_POST["word"]);
+if (array_key_exists($word, $dictionary)) {
+$meaning = $dictionary[$word];
+echo "<strong>Meaning:</strong> $meaning";
+} else {
+echo "Word not found!!";
+}
+}
+}
+?>
+</body>
+</html>
