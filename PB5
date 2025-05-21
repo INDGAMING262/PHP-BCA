@@ -1,0 +1,41 @@
+Index.php
+<html>
+<head>
+<title>FEEDBACK FORM</title>
+</head>
+<body>
+<form method="post" action="feedback.php">
+<label for="name">Name:</label><br>
+<input type="text" id="name" name="name" required><br><br>
+<label for="email">Email:</label><br>
+<input type="email" id="email" name="email" required><br><br>
+<label for="subject">Subject:<br>
+<input type="text" name="subject"><br><br>
+<label for="message">Message:</label><br>
+<textarea id="message" name="message" rows="4" cols="50"></textarea><br><br>
+<input type="submit" value="Submit">
+</form>
+</html>
+Feedback.php
+<?php
+$sn="localhost";
+$un="root";
+$pw="";
+$db="feedacks";
+$conn=new mysqli($sn,$un,$pw,$db);
+if ($conn->connect_error) {
+die("Connection failed: " . $conn->connect_error);
+}
+$name=$_POST["name"];
+$email=$_POST["email"];
+$subject=$_POST["subject"];
+$message=$_POST["message"];
+$sql="INSERT INTO feedback(name,email,subject,message)
+VALUES('$name','$email','$subject','$message')";
+if ($conn->query($sql) === TRUE) {
+echo "FEEDBACK SUBMITTED SUCCESSFULLY";
+} else {
+echo "ERROR: " . $sql . "<br>" . $conn->error;
+}
+$conn->close();
+?>
